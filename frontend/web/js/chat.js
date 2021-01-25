@@ -1,19 +1,37 @@
-
+    user = new Object;
+    user.id = $('#userid').html();
+    $( document ).ready(function() {
+        
+        setInterval(() => {
+            //console.log( "ready!" )
+            getMessageList();
+        }, 1500);    
+        setInterval(() => {
+            //console.log( "ready!" )
+            setAdminMarker();
+        }, 10);    
+    });
 $('#sendMessage').click(function () {
         //alert('xxxx')
-
+        
         text_data = $('#messageArea').val();
         $('#messageArea').val(' ');
         
         //alert(text_data);
         sendMessage(text_data);
-        
+        //console.log($('#userid').html());
+        console.log(user.id);
         setTimeout(() => { getMessageList(); }, 350);
         //getMessageList();
         
     }
 )
+function setAdminMarker() {
+ 
+    //jQuery('.post-item:has(div:chat_message_autor("admin"))').addClass('sponz');
+    jQuery('.chat_message_autor:contains("admin")').addClass('chat_admin_marker');
 
+}
 function getMessageList(params) {
     
     $.ajax({
@@ -29,14 +47,27 @@ function getMessageList(params) {
         }
     });
 }
+function decodeUnixTime(params) {
+    const milliseconds = params * 1000
+    const dateObject = new Date(milliseconds)
+    const humanDateFormat = dateObject.toLocaleString()
+    return humanDateFormat
+}
 function addMessages(params) {
 
-    $('.list-view').empty();
+    $('#chat_itembox').empty();
     params.forEach(
-        element => $('.list-view').append('<div class="chat_message_item"><div class="chat_message_autor">Сообщение от:'+element.owner+'</div> <div class="chat_message_body">'+element.body+'</div></div>')
-        );
+        
+        
+        element =>
 
-    //$('.list-view').add(params);
+            $('#chat_itembox').append(
+                '<div class="chat_message_item"><div class="chat_itemdate">'
+                +decodeUnixTime(element.create_at)
+                +'</div><div class="chat_message_autor"> от:'
+                +element.owner+'</div> <div class="chat_message_body">'
+                +element.body+'</div></div>')
+        );
 }
 function sendMessage(text_data) {
     var res;
@@ -44,7 +75,7 @@ function sendMessage(text_data) {
     $.ajax({
         url: 'index.php?r=messages%2Fajaxdata',
         type: 'GET',
-        data: ({ body:text_data}),
+        data: ({ userid:user.id, body:text_data}),
         dataType: 'html',
         success: function (res) {
             console.log(res);
@@ -55,17 +86,3 @@ function sendMessage(text_data) {
         }
     });    
 }
-$( document ).ready(function() {
-
-    setInterval(() => {
-        //console.log( "ready!" )
-        getMessageList();
-    }, 500);    
-
-    
-        
-        
-    
-    
-    
-});

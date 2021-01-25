@@ -87,12 +87,15 @@ class MessagesController extends Controller
         } else {
             $body = '';
         }
+        if (isset($_GET['userid'])) {
+            $userid = $_GET['userid'];
+        } else {
+            $userid = '';
+        }
 
         $model_msg = new Messages();
-        //$model_msg->body = $body;
-        // $model_msg->save();
 
-        if ($model_msg->getWrite($body)) {
+        if ($model_msg->getWrite($userid, $body)) {
             return true;
         } else {
             return false;

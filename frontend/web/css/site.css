@@ -153,8 +153,7 @@ a.desc:after {
 }
 .chat_message_autor{
     background-color: #deebf7;
-    width: 110px;
-    min-width: 110px;
+    margin: 2px;
 }
 .chat_message_body{
     padding: 2px;
@@ -180,4 +179,14 @@ a.desc:after {
     height: 54px;
     background-color: rgba(253, 253, 253, 0);
     color: #46b8da;
+}
+#userid{
+    display: none;
+}
+.chat_itemdate{
+    margin: 2px;
+    background-color: #deebf7;
+}
+.chat_admin_marker{
+    background-color: #f7dede;
 }

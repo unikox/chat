@@ -2,6 +2,9 @@
 
 namespace app\models;
 
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+
 /**
  * This is the model class for table "messages".
  *
@@ -24,6 +27,21 @@ class Messages extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'messages';
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['create_at', 'update_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['update_at'],
+                ],
+                // если вместо метки времени UNIX используется datetime:
+                // 'value' => new Expression('NOW()'),
+            ],
+        ];
     }
 
     /**
@@ -85,15 +103,23 @@ class Messages extends \yii\db\ActiveRecord
         return $this->hasMany(Messages::className(), ['reply' => 'id']);
     }
 
-    public function getWrite($body)
+    public function getWrite($userid, $body)
     {
         $this->body = $body;
+        $this->owner = $userid;
         $this->save();
     }
 
     public function getMessageList()
     {
-        $dataList = Messages::find()->asArray()->all();
+        $sql = 'SELECT messages.id, user.username,messages.create_at, messages.update_at, messages.body, messages.reply FROM `messages` JOIN `user` ON messages.owner = user.id';
+        //$dataList = Messages::find()->asArray()->all();
+        $dataList = Messages::find()
+            ->select('messages.id, user.username as owner, messages.create_at, messages.update_at, messages.body, messages.reply')
+            //->Join('JOIN `user` ON', '`messages`.`owner` = `user`.`id`')
+            ->leftJoin('`user`', '`messages`.`owner` = `user`.`id`')
+            ->asArray()
+            ->all();
         $dataListjson = json_encode($dataList);
 
         return $dataListjson;
