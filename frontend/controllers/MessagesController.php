@@ -8,7 +8,6 @@ use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-
 /**
  * MessagesController implements the CRUD actions for Messages model.
  */
@@ -83,12 +82,14 @@ class MessagesController extends Controller
     public function actionAjaxdata()
     {
         if (isset($_GET['body'])) {
-            $body = \yii\helpers\HtmlPurifier::process($_GET['body']);
+	   $body = \yii\helpers\Html::encode($_GET['body'], $doubleEncode = true);
+            //$body = \yii\helpers\HtmlPurifier::process($_GET['body']);
         } else {
             $body = '';
         }
         if (isset($_GET['userid'])) {
-            $userid = \yii\helpers\HtmlPurifier::process($_GET['userid']);
+	   $userid = \yii\helpers\Html::encode($_GET['userid'], $doubleEncode = true);
+            //$userid = \yii\helpers\HtmlPurifier::process($_GET['userid']);
         } else {
             $userid = '';
         }
