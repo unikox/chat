@@ -83,12 +83,12 @@ class MessagesController extends Controller
     public function actionAjaxdata()
     {
         if (isset($_GET['body'])) {
-            $body = $_GET['body'];
+            $body = \yii\helpers\HtmlPurifier::process($_GET['body']);
         } else {
             $body = '';
         }
         if (isset($_GET['userid'])) {
-            $userid = $_GET['userid'];
+            $userid = \yii\helpers\HtmlPurifier::process($_GET['userid']);
         } else {
             $userid = '';
         }
