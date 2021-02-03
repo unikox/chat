@@ -1,3 +1,7 @@
+#Git
+/.github
+.github
+
 # yii console commands
 /yii
 /yii_test
@@ -42,5 +46,4 @@ phpunit.phar
 /backend/web/index-test.php
 /backend/web/robots.txt
 
-#Git
-/.github
+
